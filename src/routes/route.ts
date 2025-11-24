@@ -7,4 +7,6 @@ const router = Router({
 })
 router.post('/api/register', register)
 router.post('/api/logs')
+router.get('/api/usage/daily')
+router.get('/api/usage/top')
 export default router

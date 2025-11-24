@@ -1,5 +1,6 @@
 import crypto from 'crypto'
 import Client from '@models/client.js'
+import jwt from 'jsonwebtoken'
 
 const register = async (req: Req, res: Res) => {
     try {
@@ -14,9 +15,10 @@ const register = async (req: Req, res: Res) => {
         const api_key = hash.slice(half)
         const client = new Client({ client_id, name, email, api_key })
         await client.save()
-        return res.status(201).json({ client_id, name, email, api_key })
+        const token = jwt.sign({ client_id }, process.env['SECRET_KEY']!, { algorithm: 'HS512', expiresIn: '7d' })
+        return res.status(201).json({ client_id, name, email, api_key, token })
     } catch (e) {
-        throw e
+        return res.status(500).json({ error: 'Internal Server Error' })
     }
 }
 export default register
