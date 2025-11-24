@@ -21,12 +21,12 @@ await redisSub.subscribe('usage_updates', async (message) => {
         throw e
     }
 })
-export const publishUsageUpdate = async (payload: { client_id: string }) => {
+const publishUsageUpdate = async (payload: { client_id: string }) => {
     try {
         await redis.publish('usage_updates', JSON.stringify(payload))
     } catch (e) {
         throw e
     }
 }
-export { redisSub }
+export { redisSub, publishUsageUpdate }
 export default redis

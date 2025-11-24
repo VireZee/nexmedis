@@ -5,7 +5,7 @@ const LogSchema = new Schema({
     api_key: { type: String, required: true },
     ip: { type: String, required: true },
     endpoint: { type: String, required: true },
-    timestamp: { type: Date, default: Date.now }
+    timestamp: { type: Date }
 }, { collection: 'logs' })
 LogSchema.index({ client_id: 1 })
 LogSchema.index({ timestamp: -1 })
