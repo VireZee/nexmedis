@@ -1,0 +1,19 @@
+import mongoose, { Schema } from 'mongoose'
+
+const LogSchema = new Schema({
+    client_id: { type: String, required: true },
+    api_key: { type: String, required: true },
+    ip: { type: String, required: true },
+    endpoint: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now }
+}, { collection: 'logs' })
+LogSchema.index({ client_id: 1 })
+LogSchema.index({ timestamp: -1 })
+LogSchema.index({ api_key: 1 })
+// /api/usage/daily
+// Fetch total daily requests per client for the last 7 days
+LogSchema.index({ client_id: 1, timestamp: -1 })
+// /api/usage/top
+// Fetch top 3 clients with the highest total requests in the last 24 hours
+LogSchema.index({ timestamp: -1, api_key: 1 })
+export default mongoose.model('Log', LogSchema)
