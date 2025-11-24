@@ -3,7 +3,10 @@ import mongoose from 'mongoose'
 
 const mongodb = async () => {
     try {
-        await mongoose.connect(`mongodb://${process.env['MONGODB_USER']}:${process.env['MONGODB_PASS']}@${process.env['DB_HOST']}:${process.env['MONGODB_PORT']}/${process.env['MONGODB_NAME']}?directConnection=true&authSource=${process.env['MONGODB_NAME']}&authMechanism=SCRAM-SHA-256`)
+        // single node, no shard, no replica set
+        await mongoose.connect(`${process.env['MONGODB_URI']}`)
+        // for sharded cluster or replica set
+        // await mongoose.connect(`${process.env['MONGODB_URI_REPLICA_SET']}`)
     } catch (e) {
         throw e
     }
