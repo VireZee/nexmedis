@@ -7,9 +7,6 @@ const LogSchema = new Schema({
     endpoint: { type: String, required: true },
     timestamp: { type: Date }
 }, { collection: 'logs' })
-LogSchema.index({ client_id: 1 })
-LogSchema.index({ timestamp: -1 })
-LogSchema.index({ api_key: 1 })
 // /api/usage/daily
 // Fetch total daily requests per client for the last 7 days
 LogSchema.index({ client_id: 1, timestamp: -1 })
