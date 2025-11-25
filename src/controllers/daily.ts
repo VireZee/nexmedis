@@ -1,12 +1,13 @@
 import redis from '@database/redis.js'
 import local from "@cache/local.js"
 import logSchema from '@models/log.js'
+import retry from '@services/retry.js'
 
 const daily = async (_: Req, res: Res) => {
     // Redis
     const key = `cache:usage:daily:v1`
     try {
-        const cache = await redis.json.get(key)
+        const cache = await retry(() => redis.json.get(key))
         if (cache) return res.json(cache)
     } catch (e) {
         console.warn('[Redis] GET failed, fallback to LRU: ', e)
@@ -48,10 +49,10 @@ const daily = async (_: Req, res: Res) => {
         })
     }
     try {
-        await Promise.all([
+        await retry(() => Promise.all([
             redis.json.SET(key, '$', newCache),
             redis.EXPIRE(key, 3600)
-        ])
+        ]))
     } catch (e) {
         console.warn('[Redis] SET failed, fallback to LRU: ', e)
     }

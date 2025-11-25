@@ -1,6 +1,8 @@
+import redis from '@database/redis.js'
 import { publishUsageUpdate } from '@database/redis.js'
 import clientSchema from '@models/client.js'
 import logger from '@services/logger.js'
+import retry from '@services/retry.js'
 
 const log = async (req: Req, res: Res) => {
     try {
@@ -10,6 +12,11 @@ const log = async (req: Req, res: Res) => {
         if (isNaN(ts.getTime())) return res.status(400).json({ error: 'Invalid timestamp' })
         const client = await clientSchema.findOne({ api_key }).lean()
         if (!client) return res.status(401).json({ error: 'Invalid API Key!' })
+        try {
+            retry(() => redis.INCRBY(`hits:${client.client_id}`, 1))
+        } catch (e) {
+            console.warn('[Redis] Counter error: ', e)
+        }
         logger({
             client_id: client.client_id,
             api_key,

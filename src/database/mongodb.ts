@@ -8,7 +8,7 @@ const mongodb = async () => {
         // for sharded cluster or replica set
         // await mongoose.connect(`${process.env['MONGODB_URI_REPLICA_SET']}`)
     } catch (e) {
-        console.error('[MongoDB] connection error.')
+        console.error('[MongoDB] connection error: ', e)
     }
 }
 export default mongodb

@@ -1,0 +1,9 @@
+**/node_modules
+**/.env
+**/dist
+**/*.tsbuildinfo
+**/Dockerfile*
+**/.dockerignore
+**/.git
+**/.gitignore
+README.md
