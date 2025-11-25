@@ -12,5 +12,5 @@ const LogSchema = new Schema({
 LogSchema.index({ client_id: 1, timestamp: -1 })
 // /api/usage/top
 // Fetch top 3 clients with the highest total requests in the last 24 hours
-LogSchema.index({ timestamp: -1, api_key: 1 })
+LogSchema.index({ timestamp: -1, client_id: 1 })
 export default mongoose.model('Log', LogSchema)

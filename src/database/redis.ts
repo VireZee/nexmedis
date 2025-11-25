@@ -19,8 +19,8 @@ await redisSub.subscribe('usage_updates', async (message: string) => {
         const dailyKey = `cache:usage:daily:${payload.client_id}:v1`
         const topKey = `cache:usage:top:v1`
         await Promise.all([
-            redis.DEL(dailyKey).catch(() => null),
-            redis.DEL(topKey).catch(() => null)
+            redis.json.DEL(dailyKey).catch(() => null),
+            redis.json.DEL(topKey).catch(() => null)
         ])
     } catch (e) {
         console.error('[Redis] subscribe error: ', e)

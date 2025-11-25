@@ -2,6 +2,7 @@ import { Router } from 'express'
 import auth from 'middleware/auth.js'
 import register from '@controllers/register.js'
 import log from '@controllers/log.js'
+import daily from '@controllers/daily.js'
 
 const router = Router({
     caseSensitive: true,
@@ -9,6 +10,6 @@ const router = Router({
 })
 router.post('/api/register', register)
 router.post('/api/logs', log)
-router.get('/api/usage/daily', auth)
+router.get('/api/usage/daily', auth, daily)
 router.get('/api/usage/top', auth)
 export default router

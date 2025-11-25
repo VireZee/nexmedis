@@ -13,8 +13,7 @@ const register = async (req: Req, res: Res) => {
         const half = hash.length / 2
         const client_id = hash.slice(0, half)
         const api_key = hash.slice(half)
-        const client = await clientSchema.create({ client_id, name, email, api_key })
-        await client.save()
+        await clientSchema.create({ client_id, name, email, api_key })
         const token = jwt.sign({ client_id }, process.env['SECRET_KEY']!, { algorithm: 'HS512', expiresIn: '7d' })
         return res.status(201).json({ client_id, name, email, api_key, token })
     } catch (e) {
