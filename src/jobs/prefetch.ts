@@ -1,5 +1,6 @@
 import redis from '@database/redis.js'
 import logSchema from '@models/log.js'
+import local from '@cache/local.js'
 export default async () => {
     const key = 'cache:usage:top:v1'
     try {
@@ -26,9 +27,11 @@ export default async () => {
             client_id: u._id,
             requests: u.total
         }))
-
-        await redis.json.set(key, '$', newCache)
-        await redis.expire(key, 3600)
+        await Promise.all([
+            redis.json.SET(key, '$', newCache),
+            redis.EXPIRE(key, 3600)
+        ])
+        local.set(key, newCache)
     } catch (e) {
         console.error('[Prefetch] Prefetch error: ', e)
     }

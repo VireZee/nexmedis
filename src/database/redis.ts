@@ -1,4 +1,5 @@
 import { createClient } from 'redis'
+import local from '@cache/local.js'
 
 const redis = createClient({ url: process.env['REDIS_URI']! })
 export const redisPub = createClient({ url: process.env['REDIS_URI']! })
@@ -26,8 +27,11 @@ await redisSub.subscribe('usage_updates', async (message: string) => {
         if (entry) entry.requests++
         else dailyClient.push({ date: today, requests: 1 })
         dailyCache[client_id] = dailyClient
-        await redis.json.SET(dailyKey, '$', dailyCache)
-        await redis.EXPIRE(dailyKey, 3600)
+        await Promise.all([
+            redis.json.SET(dailyKey, '$', dailyCache),
+            redis.EXPIRE(dailyKey, 3600)
+        ])
+        local.set(dailyKey, dailyCache)
     } catch (e) {
         console.error('[Redis] subscribe error: ', e)
     }

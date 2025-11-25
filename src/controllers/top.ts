@@ -1,5 +1,5 @@
 import redis from '@database/redis.js'
-import cache from "@cache/local.js"
+import local from "@cache/local.js"
 import logSchema from '@models/log.js'
 
 const top = async (_: Req, res: Res) => {
@@ -12,8 +12,8 @@ const top = async (_: Req, res: Res) => {
         console.warn('[Redis] GET failed, fallback to local LRU cache: ', e)
     }
     // LRU
-    const local = cache.get(key)
-    if (local) return res.json(local)
+    const localCache = local.get(key)
+    if (localCache) return res.json(localCache)
     // DB fallback
     const now = new Date()
     const dayAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24)
@@ -46,7 +46,7 @@ const top = async (_: Req, res: Res) => {
     } catch (e) {
         console.warn('[Redis] SET failed, fallback to LRU: ', e)
     }
-    cache.set(key, newCache)
+    local.set(key, newCache)
     return res.status(200).json(newCache)
 }
 export default top

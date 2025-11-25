@@ -1,6 +1,6 @@
 import { publishUsageUpdate } from '@database/redis.js'
 import clientSchema from '@models/client.js'
-import logSchema from '@models/log.js'
+import logger from '@services/logger.js'
 
 const log = async (req: Req, res: Res) => {
     try {
@@ -10,7 +10,7 @@ const log = async (req: Req, res: Res) => {
         if (isNaN(ts.getTime())) return res.status(400).json({ error: 'Invalid timestamp' })
         const client = await clientSchema.findOne({ api_key }).lean()
         if (!client) return res.status(401).json({ error: 'Invalid API Key!' })
-        await logSchema.create({
+        logger({
             client_id: client.client_id,
             api_key,
             ip,
