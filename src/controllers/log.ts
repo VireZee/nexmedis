@@ -1,7 +1,6 @@
-import redis, { publishUsageUpdate } from '@database/redis.js'
+import { publishUsageUpdate } from '@database/redis.js'
 import clientSchema from '@models/client.js'
 import logSchema from '@models/log.js'
-import hourKey from '@utils/hourKey.js'
 
 const log = async (req: Req, res: Res) => {
     try {
@@ -11,13 +10,19 @@ const log = async (req: Req, res: Res) => {
         if (isNaN(ts.getTime())) return res.status(400).json({ error: 'Invalid timestamp' })
         const client = await clientSchema.findOne({ api_key }).lean()
         if (!client) return res.status(401).json({ error: 'Invalid API Key!' })
-        const log = await logSchema.create({
+        await logSchema.create({
             client_id: client.client_id,
             api_key,
             ip,
             endpoint,
             timestamp: ts
         })
+        try {
+            await publishUsageUpdate(client.client_id)
+        } catch (e) {
+            console.log('[Redis] Failed to publish update: ', e)
+        }
+        return res.status(200).json({ message: 'ok' })
     } catch (e) {
         return res.status(500).json({ error: 'Internal Server Error' })
     }
