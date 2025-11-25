@@ -9,7 +9,7 @@ const daily = async (res: Res) => {
         const cache = await redis.json.get(key)
         if (cache) return res.json(cache)
     } catch (e) {
-        console.log('[Redis] GET failed, fallback to local LRU cache: ', e)
+        console.warn('[Redis] GET failed, fallback to local LRU cache: ', e)
     }
     // LRU
     const local = cache.get(key)

@@ -20,7 +20,7 @@ const log = async (req: Req, res: Res) => {
         try {
             await publishUsageUpdate(client.client_id, ts)
         } catch (e) {
-            console.log('[Redis] Failed to publish update: ', e)
+            console.warn('[Redis] Failed to publish update: ', e)
         }
         return res.status(200).json({ message: 'ok' })
     } catch (e) {
