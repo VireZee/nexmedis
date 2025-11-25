@@ -5,7 +5,7 @@ const rateLimit = async (req: Req, res: Res, next: Next) => {
     if (!api_key) return res.status(400).json({ error: 'API Key required!' })
     const key = `rate:${api_key}`
     const count = await redis.INCRBY(key, 1)
-    await redis.EXPIRE(key, 3600)
+    if (count === 1) await redis.EXPIRE(key, 3600)
     if (count > 1000) return res.status(429).json({ error: 'Rate limit exceeded!' })
     return next()
 }
