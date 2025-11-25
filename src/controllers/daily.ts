@@ -2,25 +2,25 @@ import redis from '@database/redis.js'
 import cache from "@cache/local.js"
 import logSchema from '@models/log.js'
 
-const daily = async (res: Res) => {
+const daily = async (_: Req, res: Res) => {
     // Redis
     const key = `cache:usage:daily:v1`
     try {
         const cache = await redis.json.get(key)
         if (cache) return res.json(cache)
     } catch (e) {
-        console.warn('[Redis] GET failed, fallback to local LRU cache: ', e)
+        console.warn('[Redis] GET failed, fallback to LRU: ', e)
     }
     // LRU
     const local = cache.get(key)
     if (local) return res.json(local)
     // DB fallback
     const now = new Date()
-    const seven_day = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 7)
+    const sevenDay = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 7)
     const usage = await logSchema.aggregate([
         {
             $match: {
-                timestamp: { $gte: seven_day, $lte: now }
+                timestamp: { $gte: sevenDay, $lte: now }
             }
         },
         {
@@ -34,7 +34,9 @@ const daily = async (res: Res) => {
                 count: { $sum: 1 }
             }
         },
-        { $sort: { '_id.client_id': 1, '_id.day': 1 } }
+        {
+            $sort: { '_id.client_id': 1, '_id.day': 1 }
+        }
     ])
     const newCache: Record<string, { date: string; requests: number }[]> = {}
     for (const u of usage) {
@@ -51,7 +53,7 @@ const daily = async (res: Res) => {
             redis.EXPIRE(key, 3600)
         ])
     } catch (e) {
-        console.warn('[Redis] SET failed, fallback to local LRU: ', e)
+        console.warn('[Redis] SET failed, fallback to LRU: ', e)
     }
     cache.set(key, newCache)
     return res.status(200).json(newCache)
