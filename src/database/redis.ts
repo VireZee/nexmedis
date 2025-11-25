@@ -14,10 +14,10 @@ try {
 }
 export const publishUsageUpdate = async (client_id: string, timestamp: Date) => await redisPub.publish('usage_updates', JSON.stringify({ client_id, timestamp }))
 await redisSub.subscribe('usage_updates', async (message: string) => {
+    const dailyKey = `cache:usage:daily:v1`
     try {
         const payload = JSON.parse(message)
         const { client_id, timestamp } = payload
-        const dailyKey = `cache:usage:daily:v1`
         const today = timestamp.toISOString().slice(0, 10)
         let dailyCache = await redis.json.get(dailyKey) as Record<string, { date: string, requests: number }[]> | null
         if (!dailyCache) dailyCache = {}

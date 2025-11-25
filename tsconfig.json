@@ -34,6 +34,7 @@
       "@config/*": ["config/*"],
       "@database/*": ["database/*"],
       "@cache/*": ["cache/*"],
+      "@jobs/*": ["jobs/*"],
       "@models/*": ["models/*"],
       "@controllers/*": ["controllers/*"],
       "@routes/*": ["routes/*"],
