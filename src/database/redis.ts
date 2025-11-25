@@ -12,16 +12,15 @@ try {
 } catch (e) {
     console.log('[Redis] connection error.')
 }
-export const publishUsageUpdate = async (client_id: string) => await redisPub.publish('usage_updates', JSON.stringify({ client_id }))
+export const publishUsageUpdate = async (client_id: string, timestamp: Date) => await redisPub.publish('usage_updates', JSON.stringify({ client_id, timestamp }))
 await redisSub.subscribe('usage_updates', async (message: string) => {
     try {
         const payload = JSON.parse(message)
-        const dailyKey = `cache:usage:daily:${payload.client_id}:v1`
+        const { client_id, timestamp } = payload
+        const dailyKey = `cache:usage:daily:v1`
         const topKey = `cache:usage:top:v1`
-        await Promise.all([
-            redis.json.DEL(dailyKey).catch(() => null),
-            redis.json.DEL(topKey).catch(() => null)
-        ])
+        const today = timestamp.toISOString().slice(0, 10)
+        let dailyCache = await redis.json.get(dailyKey)
     } catch (e) {
         console.error('[Redis] subscribe error: ', e)
     }

@@ -18,7 +18,7 @@ const log = async (req: Req, res: Res) => {
             timestamp: ts
         })
         try {
-            await publishUsageUpdate(client.client_id)
+            await publishUsageUpdate(client.client_id, ts)
         } catch (e) {
             console.log('[Redis] Failed to publish update: ', e)
         }
