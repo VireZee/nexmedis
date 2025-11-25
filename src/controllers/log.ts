@@ -7,7 +7,7 @@ import retry from '@services/retry.js'
 const log = async (req: Req, res: Res) => {
     try {
         const { api_key, ip, endpoint, timestamp } = req.body
-        if (!api_key || !ip || !endpoint) return res.status(400).json({ error: 'API Key, IP and Endpoint are required!' })
+        if (!ip || !endpoint) return res.status(400).json({ error: 'IP and Endpoint are required!' })
         const ts = timestamp ? new Date(timestamp) : new Date()
         if (isNaN(ts.getTime())) return res.status(400).json({ error: 'Invalid timestamp' })
         const client = await clientSchema.findOne({ api_key }).lean()
