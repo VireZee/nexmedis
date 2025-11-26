@@ -13,3 +13,11 @@ bun i
 bun run dev
 ```
 For API documentaion go to `/docs`
+Run with docker
+```sh
+docker build -t nexmedis .
+docker run -d --name nexmedis \
+  --env-file .env \
+  -p 3000:3000 \
+  nexmedis
+```
