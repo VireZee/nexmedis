@@ -6,4 +6,5 @@
 **/.dockerignore
 **/.git
 **/.gitignore
+**/pdf
 README.md
