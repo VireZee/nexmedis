@@ -36,6 +36,7 @@
       "@cache/*": ["cache/*"],
       "@jobs/*": ["jobs/*"],
       "@models/*": ["models/*"],
+      "@middleware/*": ["middleware/*"],
       "@controllers/*": ["controllers/*"],
       "@services/*": ["services/*"],
       "@utils/*": ["utils/*"],
