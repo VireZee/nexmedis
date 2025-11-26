@@ -7,7 +7,7 @@ MONGODB_URI_REPLICA_SET=mongodb://<your_database_user>:<your_database_password>@
 REDIS_URI=redis://<your_redis_username_if_any>:<your_redis_password>@<your_host>:6379
 PORT=3000
 SECRET_KEY=<your_secret_key>
-WHITELIST_IPS=<your_list_ip_to_whitelist>
+WHITELIST_IPS=::ffff:127.0.0.1
 ```
 Start (dev)
 ```sh
