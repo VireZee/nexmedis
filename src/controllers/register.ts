@@ -8,7 +8,7 @@ const register = async (req: Req, res: Res) => {
         if (!name || !email) return res.status(400).json({ error: 'Name and Email required!' })
         if (!/^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) return res.status(400).json({ error: 'Invalid Email!' })
         const exists = await clientSchema.findOne({ email }).lean()
-        if (exists) return res.status(400).json({ error: 'Email already registered!' })
+        if (exists) return res.status(409).json({ error: 'Email already registered!' })
         const hash = crypto.createHash('sha256').update(email.toLowerCase().trim()).digest('hex')
         const half = hash.length / 2
         const client_id = hash.slice(0, half)
