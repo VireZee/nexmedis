@@ -26,7 +26,7 @@ export default async () => {
         ])
         const newCache = usage.map(u => ({
             client_id: u._id,
-            requests: u.total
+            requests: u.count
         }))
         await retry(() => Promise.all([
             redis.json.SET(key, '$', newCache),

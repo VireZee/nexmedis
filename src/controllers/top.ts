@@ -37,7 +37,7 @@ const top = async (_: Req, res: Res) => {
     ])
     const newCache = usage.map(u => ({
         client_id: u._id,
-        requests: u.total
+        requests: u.count
     }))
     try {
         await retry(() => Promise.all([
