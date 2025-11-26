@@ -3,14 +3,16 @@ import { publishUsageUpdate } from '@database/redis.js'
 import clientSchema from '@models/client.js'
 import logger from '@services/logger.js'
 import retry from '@services/retry.js'
+import sanitize from '@utils/sanitize.js'
 
 const log = async (req: Req, res: Res) => {
     try {
         const { api_key, ip, endpoint, timestamp } = req.body
+        const api = sanitize(api_key)
         if (!ip || !endpoint) return res.status(400).json({ error: 'IP and Endpoint are required!' })
         const ts = timestamp ? new Date(timestamp) : new Date()
         if (isNaN(ts.getTime())) return res.status(400).json({ error: 'Invalid timestamp' })
-        const client = await clientSchema.findOne({ api_key }).lean()
+        const client = await clientSchema.findOne({ api_key: api }).lean()
         if (!client) return res.status(401).json({ error: 'Invalid API Key!' })
         try {
             retry(() => redis.INCRBY(`hits:${client.client_id}`, 1))
@@ -19,7 +21,7 @@ const log = async (req: Req, res: Res) => {
         }
         logger({
             client_id: client.client_id,
-            api_key,
+            api_key: api,
             ip,
             endpoint,
             timestamp: ts

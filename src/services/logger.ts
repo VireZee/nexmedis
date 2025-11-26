@@ -1,4 +1,5 @@
 import logSchema from '@models/log.js'
+import retry from './retry.js'
 import type LogEntry from '@type/logEntry.d.ts'
 
 const batch: LogEntry[] = []
@@ -7,7 +8,7 @@ setInterval(async () => {
     if (batch.length === 0) return
     const items = batch.splice(0, batch.length)
     try {
-        await logSchema.insertMany(items, { ordered: false })
+        await retry(() => logSchema.insertMany(items, { ordered: false }))
     } catch {
         batch.unshift(...items)
     }

@@ -1,7 +1,7 @@
 import express from 'express'
 import mongodb from '@database/mongodb.js'
-import router from '@routes/route.js'
 import prefetch from '@jobs/prefetch.js'
+import router from '@routes/route.js'
 
 const app = express()
 app.use(express.json())

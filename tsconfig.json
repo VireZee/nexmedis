@@ -36,8 +36,9 @@
       "@cache/*": ["cache/*"],
       "@jobs/*": ["jobs/*"],
       "@models/*": ["models/*"],
-      "@services/*": ["services/*"],
       "@controllers/*": ["controllers/*"],
+      "@services/*": ["services/*"],
+      "@utils/*": ["utils/*"],
       "@routes/*": ["routes/*"],
       "@type/*": ["types/*"]
     },                                                   /* Specify a set of entries that re-map imports to additional lookup locations. */

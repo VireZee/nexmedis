@@ -1,10 +1,11 @@
 import { createClient } from 'redis'
 import local from '@cache/local.js'
 import retry from '@services/retry.js'
+import queue from '@services/queue.js'
 
 const redis = createClient({ url: process.env['REDIS_URI']! })
-export const redisPub = createClient({ url: process.env['REDIS_URI']! })
-export const redisSub = createClient({ url: process.env['REDIS_URI']! })
+export const redisPub = redis.duplicate()
+export const redisSub = redis.duplicate()
 try {
     await Promise.all([
         redis.connect(),
@@ -14,7 +15,13 @@ try {
 } catch (e) {
     console.error('[Redis] Connection error: ', e)
 }
-export const publishUsageUpdate = async (client_id: string, timestamp: Date) => await retry(() => redisPub.publish('usage_updates', JSON.stringify({ client_id, timestamp })))
+export const publishUsageUpdate = async (client_id: string, timestamp: Date) => {
+    try {
+        await retry(() => redisPub.publish('usage_updates', JSON.stringify({ client_id, timestamp })))
+    } catch {
+        queue(client_id, timestamp)
+    }
+}
 await redisSub.subscribe('usage_updates', async (message: string) => {
     const dailyKey = `cache:usage:daily:v1`
     try {
