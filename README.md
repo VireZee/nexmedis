@@ -12,3 +12,4 @@ Running the app (dev)
 bun i
 bun run dev
 ```
+For API documentaion go to `/docs`
