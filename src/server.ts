@@ -11,6 +11,6 @@ app.use(router)
         mongodb(),
         prefetch()
     ]),
-    setInterval(prefetch, 1000 * 60 * 10)
+    setInterval(prefetch, 1000 * 60 * 5)
     app.listen(process.env['PORT'])
 })()
