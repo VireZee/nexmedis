@@ -1,3 +1,4 @@
+For number 3 is right [here](https://github.com/VireZee/nexmedis/blob/main/pdf/3.pdf)
 Copy the `.env.example` files to `.env` and modify it with your configuration
 ```env
 MONGODB_URI=mongodb://<your_database_user>:<your_database_password>@<your_host>:27017/nexmedis?directConnection=true&authMechanism=SCRAM-SHA-256
