@@ -7,7 +7,6 @@ import swaggerUi from 'swagger-ui-express'
 
 const app = express()
 app.use(express.json())
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swagger))
 app.use(router)
 ;(async () => {
     await Promise.all([
@@ -17,3 +16,4 @@ app.use(router)
     setInterval(prefetch, 1000 * 60 * 5)
     app.listen(process.env['PORT'])
 })()
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swagger))
