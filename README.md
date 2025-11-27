@@ -17,9 +17,13 @@ bun run dev
 Run with docker
 ```sh
 docker build -t nexmedis .
-docker run -d --name nexmedis \
+docker run -d \
+  --name nexmedis \
+  --network <your_network_name> \
   --env-file .env \
   -p 3000:3000 \
   nexmedis
 ```
+> [!IMPORTANT]
+> **Make sure you configure the docker network and your `env` carefully!**
 For API documentaion go to `/docs`
