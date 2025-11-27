@@ -26,4 +26,5 @@ docker run -d \
 ```
 > [!IMPORTANT]
 > **Make sure you configure the docker network and your `env` carefully!**
+
 For API documentaion go to `/docs`
